@@ -1,3 +1,7 @@
+from dotenv import load_dotenv
+load_dotenv()
+
+
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -15,16 +19,24 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 
-# ================= DATABASE =================
+
+
 def get_db():
     return psycopg2.connect(
-        host="localhost",
-        user="postgres",
-        password="postgres",
-        dbname="ml",
-        port=5432,
+        os.environ["DATABASE_URL"],
         cursor_factory=RealDictCursor
     )
+
+
+# def get_db():
+#     return psycopg2.connect(
+#         host=os.getenv("PGHOST"),
+#         user=os.getenv("PGUSER"),
+#         password=os.getenv("PGPASSWORD"),
+#         dbname=os.getenv("PGDATABASE"),
+#         port=int(os.getenv("PGPORT", 5432)),
+#         cursor_factory=RealDictCursor
+#     )
 
 
 # ================= HOME =================
