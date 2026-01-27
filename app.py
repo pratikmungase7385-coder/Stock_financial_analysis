@@ -302,6 +302,30 @@ def get_db():
     )
 
 
+@app.get("/_debug/db")
+def debug_db():
+    db = get_db()
+    cur = db.cursor()
+
+    cur.execute("SELECT COUNT(*) AS c FROM companies")
+    companies = cur.fetchone()["c"]
+
+    cur.execute("SELECT COUNT(*) AS a FROM analysis")
+    analysis = cur.fetchone()["a"]
+
+    cur.execute("SELECT COUNT(*) AS p FROM prosandcons")
+    pros = cur.fetchone()["p"]
+
+    cur.close()
+    db.close()
+
+    return {
+        "companies": companies,
+        "analysis": analysis,
+        "prosandcons": pros
+    }
+
+
 # ================= HOME (ONLY FULL DATA) =================
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
