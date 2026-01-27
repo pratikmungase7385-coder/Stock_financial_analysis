@@ -1,6 +1,9 @@
 from dotenv import load_dotenv
 load_dotenv()
 
+import os
+import psycopg2
+from psycopg2.extras import RealDictCursor
 
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -8,35 +11,74 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 
-import psycopg2
-from psycopg2.extras import RealDictCursor
-import os
+from db_init import init_db
 
+
+# ================= INIT DB (AUTO CREATE TABLES) =================
+init_db()
+
+
+# ================= APP =================
 app = FastAPI()
-app.add_middleware(SessionMiddleware, secret_key="dev-secret")
 
+# ⚠️ SECRET should come from ENV (Render → Environment)
+SESSION_SECRET = os.getenv("SESSION_SECRET", "dev-secret")
+
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=SESSION_SECRET
+)
+
+# ================= STATIC & TEMPLATES =================
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 
-
-
+# ================= DB CONNECTION =================
 def get_db():
     return psycopg2.connect(
         os.environ["DATABASE_URL"],
+        sslmode="require",
         cursor_factory=RealDictCursor
     )
 
+from dotenv import load_dotenv
+load_dotenv()
 
-# def get_db():
-#     return psycopg2.connect(
-#         host=os.getenv("PGHOST"),
-#         user=os.getenv("PGUSER"),
-#         password=os.getenv("PGPASSWORD"),
-#         dbname=os.getenv("PGDATABASE"),
-#         port=int(os.getenv("PGPORT", 5432)),
-#         cursor_factory=RealDictCursor
-#     )
+import os
+import psycopg2
+from psycopg2.extras import RealDictCursor
+
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from starlette.middleware.sessions import SessionMiddleware
+
+from db_init import init_db
+
+# ---------------- APP ----------------
+app = FastAPI()
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=os.getenv("SESSION_SECRET", "dev-secret")
+)
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
+
+# ---------------- STARTUP ----------------
+@app.on_event("startup")
+def startup():
+    init_db()   # 👈 tables auto-create (NO render shell needed)
+
+# ---------------- DB ----------------
+def get_db():
+    return psycopg2.connect(
+        os.environ["DATABASE_URL"],
+        sslmode="require",
+        cursor_factory=RealDictCursor
+    )
 
 
 # ================= HOME =================
