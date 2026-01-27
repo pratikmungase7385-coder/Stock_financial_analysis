@@ -81,6 +81,8 @@ def get_db():
     )
 
 
+
+
 # ================= HOME =================
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):

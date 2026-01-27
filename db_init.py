@@ -1,117 +1,104 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 import os
 import psycopg2
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
-
-
-SCHEMA_SQL = """
--- ================= companies =================
-CREATE TABLE IF NOT EXISTS companies (
-    company_id TEXT PRIMARY KEY,
-    company_logo TEXT,
-    company_name TEXT,
-    chart_link TEXT,
-    about_company TEXT,
-    website TEXT,
-    nse_profile TEXT,
-    bse_profile TEXT,
-    face_value NUMERIC,
-    book_value NUMERIC,
-    roce_percentage NUMERIC,
-    roe_percentage NUMERIC
-);
-
--- ================= analysis =================
-CREATE TABLE IF NOT EXISTS analysis (
-    id SERIAL PRIMARY KEY,
-    company_id TEXT REFERENCES companies(company_id),
-    compounded_sales_growth TEXT,
-    compounded_profit_growth TEXT,
-    stock_price_cagr TEXT,
-    roe TEXT
-);
-
--- ================= pros & cons =================
-CREATE TABLE IF NOT EXISTS prosandcons (
-    id SERIAL PRIMARY KEY,
-    company_id TEXT REFERENCES companies(company_id),
-    pros TEXT,
-    cons TEXT
-);
-
--- ================= balance sheet =================
-CREATE TABLE IF NOT EXISTS balancesheet (
-    id SERIAL PRIMARY KEY,
-    company_id TEXT REFERENCES companies(company_id),
-    year TEXT,
-    equity_capital NUMERIC,
-    reserves NUMERIC,
-    borrowings NUMERIC,
-    other_liabilities NUMERIC,
-    total_liabilities NUMERIC,
-    fixed_assets NUMERIC,
-    cwip NUMERIC,
-    investments NUMERIC,
-    other_asset NUMERIC,
-    total_assets NUMERIC
-);
-
--- ================= profit & loss =================
-CREATE TABLE IF NOT EXISTS profitandloss (
-    id SERIAL PRIMARY KEY,
-    company_id TEXT REFERENCES companies(company_id),
-    year TEXT,
-    sales NUMERIC,
-    expenses NUMERIC,
-    operating_profit NUMERIC,
-    opm_percentage NUMERIC,
-    other_income NUMERIC,
-    interest NUMERIC,
-    depreciation NUMERIC,
-    profit_before_tax NUMERIC,
-    tax_percentage NUMERIC,
-    net_profit NUMERIC,
-    eps NUMERIC,
-    dividend_payout NUMERIC
-);
-
--- ================= cashflow =================
-CREATE TABLE IF NOT EXISTS cashflow (
-    id SERIAL PRIMARY KEY,
-    company_id TEXT REFERENCES companies(company_id),
-    year TEXT,
-    operating_activity NUMERIC,
-    investing_activity NUMERIC,
-    financing_activity NUMERIC,
-    net_cash_flow NUMERIC
-);
-
--- ================= documents =================
-CREATE TABLE IF NOT EXISTS documents (
-    id SERIAL PRIMARY KEY,
-    company_id TEXT REFERENCES companies(company_id),
-    year TEXT,
-    annual_report TEXT
-);
-"""
-
 
 def init_db():
-    db_url = os.getenv("DATABASE_URL")
-
-    if not db_url:
-        raise RuntimeError("❌ DATABASE_URL env variable not set")
-
-    conn = psycopg2.connect(
-        db_url,
+    db = psycopg2.connect(
+        os.environ["DATABASE_URL"],
         sslmode="require"
     )
+    cur = db.cursor()
 
-    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-    cur = conn.cursor()
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS companies (
+        company_id VARCHAR(20) PRIMARY KEY,
+        company_logo VARCHAR(255),
+        company_name VARCHAR(255),
+        chart_link VARCHAR(255),
+        about_company TEXT,
+        website VARCHAR(255),
+        nse_profile VARCHAR(255),
+        bse_profile VARCHAR(255),
+        face_value INT,
+        book_value INT,
+        roce_percentage DECIMAL(10,2),
+        roe_percentage DECIMAL(10,2)
+    );
 
-    cur.execute(SCHEMA_SQL)
+    CREATE TABLE IF NOT EXISTS analysis (
+        id INT,
+        company_id VARCHAR(20),
+        compounded_sales_growth VARCHAR(50),
+        compounded_profit_growth VARCHAR(50),
+        stock_price_cagr VARCHAR(50),
+        roe VARCHAR(50)
+    );
 
+    CREATE TABLE IF NOT EXISTS prosandcons (
+        id INT,
+        company_id VARCHAR(20),
+        pros TEXT,
+        cons TEXT
+    );
+
+    CREATE TABLE IF NOT EXISTS balancesheet (
+        id INT,
+        company_id VARCHAR(20),
+        year VARCHAR(20),
+        equity_capital VARCHAR(20),
+        reserves BIGINT,
+        borrowings BIGINT,
+        other_liabilities BIGINT,
+        total_liabilities BIGINT,
+        fixed_assets BIGINT,
+        cwip BIGINT,
+        investments BIGINT,
+        other_asset BIGINT,
+        total_assets BIGINT
+    );
+
+    CREATE TABLE IF NOT EXISTS profitandloss (
+        id INT,
+        company_id VARCHAR(20),
+        year VARCHAR(20),
+        sales BIGINT,
+        expenses BIGINT,
+        operating_profit BIGINT,
+        opm_percentage INT,
+        other_income BIGINT,
+        interest BIGINT,
+        depreciation BIGINT,
+        profit_before_tax BIGINT,
+        tax_percentage VARCHAR(10),
+        net_profit BIGINT,
+        eps INT,
+        dividend_payout VARCHAR(10)
+    );
+
+    CREATE TABLE IF NOT EXISTS cashflow (
+        id INT,
+        company_id VARCHAR(20),
+        year VARCHAR(20),
+        operating_activity BIGINT,
+        investing_activity BIGINT,
+        financing_activity BIGINT,
+        net_cash_flow BIGINT
+    );
+
+    CREATE TABLE IF NOT EXISTS documents (
+        id INT,
+        company_id VARCHAR(20),
+        year INT,
+        annual_report VARCHAR(255)
+    );
+    """)
+
+    db.commit()
     cur.close()
-    conn.close()
-
+    db.close()
     print("✅ Database schema ensured (tables created if missing)")
+
+if __name__ == "__main__":
+    init_db()
