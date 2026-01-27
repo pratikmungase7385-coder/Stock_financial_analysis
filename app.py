@@ -249,10 +249,6 @@
 
 
 
-
-
-
-
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -268,21 +264,16 @@ from starlette.middleware.sessions import SessionMiddleware
 
 from db_init import init_db
 
-
-# ================= APP =================
+# ================= INIT =================
 app = FastAPI()
 
-# ❗ MUST be set in Render ENV
-SESSION_SECRET = os.getenv("SESSION_SECRET")
-if not SESSION_SECRET:
-    raise RuntimeError("SESSION_SECRET not set")
+SESSION_SECRET = os.getenv("SESSION_SECRET", "dev-secret")
 
 app.add_middleware(
     SessionMiddleware,
     secret_key=SESSION_SECRET
 )
 
-# ================= STATIC & TEMPLATES =================
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
@@ -290,7 +281,7 @@ templates = Jinja2Templates(directory="templates")
 # ================= STARTUP =================
 @app.on_event("startup")
 def startup():
-    init_db()   # tables auto-create on deploy
+    init_db()   # auto-create tables on Render
 
 
 # ================= DB =================
@@ -302,46 +293,22 @@ def get_db():
     )
 
 
-@app.get("/_debug/db")
-def debug_db():
-    db = get_db()
-    cur = db.cursor()
-
-    cur.execute("SELECT COUNT(*) AS c FROM companies")
-    companies = cur.fetchone()["c"]
-
-    cur.execute("SELECT COUNT(*) AS a FROM analysis")
-    analysis = cur.fetchone()["a"]
-
-    cur.execute("SELECT COUNT(*) AS p FROM prosandcons")
-    pros = cur.fetchone()["p"]
-
-    cur.close()
-    db.close()
-
-    return {
-        "companies": companies,
-        "analysis": analysis,
-        "prosandcons": pros
-    }
-
-
-# ================= HOME (ONLY FULL DATA) =================
+# ================= HOME =================
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
     db = get_db()
     cur = db.cursor()
 
+    # ONLY companies having real data
     cur.execute("""
         SELECT DISTINCT c.company_id, c.company_name
         FROM companies c
         WHERE
             EXISTS (SELECT 1 FROM analysis a WHERE a.company_id = c.company_id)
-        AND EXISTS (
-            SELECT 1 FROM prosandcons pc
-            WHERE pc.company_id = c.company_id
-              AND (pc.pros IS NOT NULL OR pc.cons IS NOT NULL)
-        )
+        AND EXISTS (SELECT 1 FROM prosandcons p WHERE p.company_id = c.company_id)
+        AND EXISTS (SELECT 1 FROM balancesheet b WHERE b.company_id = c.company_id)
+        AND EXISTS (SELECT 1 FROM profitandloss pl WHERE pl.company_id = c.company_id)
+        AND EXISTS (SELECT 1 FROM cashflow cf WHERE cf.company_id = c.company_id)
         ORDER BY c.company_name
         LIMIT 5
     """)
@@ -382,7 +349,7 @@ def search(q: str, request: Request):
     return RedirectResponse(f"/company/{row['company_id']}", status_code=302)
 
 
-# ================= COMPANY LIST (ALL COMPANIES) =================
+# ================= ALL COMPANIES =================
 @app.get("/companies", response_class=HTMLResponse)
 def companies(request: Request):
     db = get_db()
@@ -418,17 +385,26 @@ def company(cid: str, request: Request):
         db.close()
         return HTMLResponse("Company not found", status_code=404)
 
-    def q(sql):
-        cur.execute(sql, (cid,))
-        return cur.fetchall()
+    cur.execute("SELECT * FROM analysis WHERE company_id=%s", (cid,))
+    analysis = cur.fetchall()
 
-    analysis = q("SELECT * FROM analysis WHERE company_id=%s")
-    pros = q("SELECT pros FROM prosandcons WHERE company_id=%s AND pros IS NOT NULL")
-    cons = q("SELECT cons FROM prosandcons WHERE company_id=%s AND cons IS NOT NULL")
-    balancesheet = q("SELECT * FROM balancesheet WHERE company_id=%s ORDER BY year")
-    profitandloss = q("SELECT * FROM profitandloss WHERE company_id=%s ORDER BY year")
-    cashflow = q("SELECT * FROM cashflow WHERE company_id=%s ORDER BY year")
-    documents = q("SELECT * FROM documents WHERE company_id=%s ORDER BY year DESC")
+    cur.execute("SELECT pros FROM prosandcons WHERE company_id=%s AND pros IS NOT NULL", (cid,))
+    pros = cur.fetchall()
+
+    cur.execute("SELECT cons FROM prosandcons WHERE company_id=%s AND cons IS NOT NULL", (cid,))
+    cons = cur.fetchall()
+
+    cur.execute("SELECT * FROM balancesheet WHERE company_id=%s ORDER BY year", (cid,))
+    balancesheet = cur.fetchall()
+
+    cur.execute("SELECT * FROM profitandloss WHERE company_id=%s ORDER BY year", (cid,))
+    profitandloss = cur.fetchall()
+
+    cur.execute("SELECT * FROM cashflow WHERE company_id=%s ORDER BY year", (cid,))
+    cashflow = cur.fetchall()
+
+    cur.execute("SELECT * FROM documents WHERE company_id=%s ORDER BY year DESC", (cid,))
+    documents = cur.fetchall()
 
     cur.close()
     db.close()
@@ -447,3 +423,14 @@ def company(cid: str, request: Request):
             "documents": documents
         }
     )
+
+
+# ================= ADMIN: RUN PIPELINE =================
+@app.get("/_admin/run-pipeline")
+def run_pipeline():
+    try:
+        from run_pipeline import main
+        main()
+        return {"status": "pipeline executed"}
+    except Exception as e:
+        return {"error": str(e)}
