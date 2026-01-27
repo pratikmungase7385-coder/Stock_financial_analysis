@@ -11,8 +11,22 @@ def init_db():
     )
     cur = db.cursor()
 
+    # 🔥 ONE-TIME HARD RESET (REMOVE AFTER FIRST DEPLOY)
     cur.execute("""
-    CREATE TABLE IF NOT EXISTS companies (
+    DROP TABLE IF EXISTS
+        documents,
+        cashflow,
+        profitandloss,
+        balancesheet,
+        prosandcons,
+        analysis,
+        companies
+    CASCADE;
+    """)
+
+    # ✅ RECREATE TABLES
+    cur.execute("""
+    CREATE TABLE companies (
         company_id VARCHAR(20) PRIMARY KEY,
         company_logo VARCHAR(255),
         company_name VARCHAR(255),
@@ -27,8 +41,8 @@ def init_db():
         roe_percentage DECIMAL(10,2)
     );
 
-    CREATE TABLE IF NOT EXISTS analysis (
-        id INT,
+    CREATE TABLE analysis (
+        id SERIAL PRIMARY KEY,
         company_id VARCHAR(20),
         compounded_sales_growth VARCHAR(50),
         compounded_profit_growth VARCHAR(50),
@@ -36,15 +50,15 @@ def init_db():
         roe VARCHAR(50)
     );
 
-    CREATE TABLE IF NOT EXISTS prosandcons (
-        id INT,
+    CREATE TABLE prosandcons (
+        id SERIAL PRIMARY KEY,
         company_id VARCHAR(20),
         pros TEXT,
         cons TEXT
     );
 
-    CREATE TABLE IF NOT EXISTS balancesheet (
-        id INT,
+    CREATE TABLE balancesheet (
+        id SERIAL PRIMARY KEY,
         company_id VARCHAR(20),
         year VARCHAR(20),
         equity_capital VARCHAR(20),
@@ -59,8 +73,8 @@ def init_db():
         total_assets BIGINT
     );
 
-    CREATE TABLE IF NOT EXISTS profitandloss (
-        id INT,
+    CREATE TABLE profitandloss (
+        id SERIAL PRIMARY KEY,
         company_id VARCHAR(20),
         year VARCHAR(20),
         sales BIGINT,
@@ -77,8 +91,8 @@ def init_db():
         dividend_payout VARCHAR(10)
     );
 
-    CREATE TABLE IF NOT EXISTS cashflow (
-        id INT,
+    CREATE TABLE cashflow (
+        id SERIAL PRIMARY KEY,
         company_id VARCHAR(20),
         year VARCHAR(20),
         operating_activity BIGINT,
@@ -87,8 +101,8 @@ def init_db():
         net_cash_flow BIGINT
     );
 
-    CREATE TABLE IF NOT EXISTS documents (
-        id INT,
+    CREATE TABLE documents (
+        id SERIAL PRIMARY KEY,
         company_id VARCHAR(20),
         year INT,
         annual_report VARCHAR(255)
@@ -98,7 +112,7 @@ def init_db():
     db.commit()
     cur.close()
     db.close()
-    print("✅ Database schema ensured (tables created if missing)")
+    print("🔥 HARD RESET DONE + TABLES RECREATED")
 
 if __name__ == "__main__":
     init_db()

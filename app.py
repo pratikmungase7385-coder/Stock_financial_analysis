@@ -1,3 +1,258 @@
+# from dotenv import load_dotenv
+# load_dotenv()
+
+# import os
+# import psycopg2
+# from psycopg2.extras import RealDictCursor
+
+# from fastapi import FastAPI, Request
+# from fastapi.responses import HTMLResponse, RedirectResponse
+# from fastapi.staticfiles import StaticFiles
+# from fastapi.templating import Jinja2Templates
+# from starlette.middleware.sessions import SessionMiddleware
+
+# from db_init import init_db
+
+
+# # ================= INIT DB (AUTO CREATE TABLES) =================
+# init_db()
+
+
+# # ================= APP =================
+# app = FastAPI()
+
+# # ⚠️ SECRET should come from ENV (Render → Environment)
+# SESSION_SECRET = os.getenv("SESSION_SECRET", "dev-secret")
+
+# app.add_middleware(
+#     SessionMiddleware,
+#     secret_key=SESSION_SECRET
+# )
+
+# # ================= STATIC & TEMPLATES =================
+# app.mount("/static", StaticFiles(directory="static"), name="static")
+# templates = Jinja2Templates(directory="templates")
+
+
+# # ================= DB CONNECTION =================
+# def get_db():
+#     return psycopg2.connect(
+#         os.environ["DATABASE_URL"],
+#         sslmode="require",
+#         cursor_factory=RealDictCursor
+#     )
+
+# from dotenv import load_dotenv
+# load_dotenv()
+
+# import os
+# import psycopg2
+# from psycopg2.extras import RealDictCursor
+
+# from fastapi import FastAPI, Request
+# from fastapi.responses import HTMLResponse, RedirectResponse
+# from fastapi.staticfiles import StaticFiles
+# from fastapi.templating import Jinja2Templates
+# from starlette.middleware.sessions import SessionMiddleware
+
+# from db_init import init_db
+
+# # ---------------- APP ----------------
+# app = FastAPI()
+# app.add_middleware(
+#     SessionMiddleware,
+#     secret_key=os.getenv("SESSION_SECRET", "dev-secret")
+# )
+
+# app.mount("/static", StaticFiles(directory="static"), name="static")
+# templates = Jinja2Templates(directory="templates")
+
+# # ---------------- STARTUP ----------------
+# @app.on_event("startup")
+# def startup():
+#     init_db()   # 👈 tables auto-create (NO render shell needed)
+
+# # ---------------- DB ----------------
+# def get_db():
+#     return psycopg2.connect(
+#         os.environ["DATABASE_URL"],
+#         sslmode="require",
+#         cursor_factory=RealDictCursor
+#     )
+
+
+
+
+# # ================= HOME =================
+# @app.get("/", response_class=HTMLResponse)
+# def home(request: Request):
+#     db = get_db()
+#     cur = db.cursor()
+
+#     cur.execute("""
+#         SELECT DISTINCT c.company_id, c.company_name
+#         FROM companies c
+#         WHERE
+#             EXISTS (
+#                 SELECT 1 FROM analysis a
+#                 WHERE a.company_id = c.company_id
+#             )
+#         AND EXISTS (
+#                 SELECT 1 FROM prosandcons pc
+#                 WHERE pc.company_id = c.company_id
+#                   AND (pc.pros IS NOT NULL OR pc.cons IS NOT NULL)
+#             )
+#         ORDER BY c.company_name
+#         LIMIT 5
+#     """)
+
+#     examples = cur.fetchall()
+
+#     cur.close()
+#     db.close()
+
+#     error = request.session.pop("error", None)
+
+#     return templates.TemplateResponse(
+#         "home.html",
+#         {
+#             "request": request,
+#             "examples": examples,   # dicts → c.company_id works
+#             "error": error
+#         }
+#     )
+
+
+# # ================= SEARCH =================
+# @app.get("/search")
+# def search(q: str, request: Request):
+#     db = get_db()
+#     cur = db.cursor()
+
+#     cur.execute("""
+#         SELECT company_id
+#         FROM companies
+#         WHERE company_id ILIKE %s OR company_name ILIKE %s
+#         LIMIT 1
+#     """, (f"%{q}%", f"%{q}%"))
+
+#     row = cur.fetchone()
+#     cur.close()
+#     db.close()
+
+#     if not row:
+#         request.session["error"] = f"No company found for '{q}'"
+#         return RedirectResponse("/", status_code=302)
+
+#     return RedirectResponse(f"/company/{row['company_id']}", status_code=302)
+
+
+
+# @app.get("/companies", response_class=HTMLResponse)
+# def companies(request: Request):
+#     db = get_db()
+#     cur = db.cursor()
+
+#     cur.execute("""
+#         SELECT company_id, company_name, company_logo
+#         FROM companies
+#         ORDER BY company_name
+#     """)
+
+#     companies = cur.fetchall()
+#     cur.close()
+#     db.close()
+
+#     return templates.TemplateResponse(
+#         "list.html",
+#         {
+#             "request": request,
+#             "companies": companies
+#         }
+#     )
+
+
+# # ================= COMPANY PAGE =================
+# @app.get("/company/{cid}", response_class=HTMLResponse)
+# def company(cid: str, request: Request):
+#     db = get_db()
+#     cur = db.cursor()
+
+#     cur.execute("SELECT * FROM companies WHERE company_id=%s", (cid,))
+#     company = cur.fetchone()
+
+#     if not company:
+#         cur.close()
+#         db.close()
+#         return HTMLResponse("Company not found", status_code=404)
+
+#     cur.execute("SELECT * FROM analysis WHERE company_id=%s", (cid,))
+#     analysis = cur.fetchall()
+
+#     cur.execute(
+#         "SELECT pros FROM prosandcons WHERE company_id=%s AND pros IS NOT NULL",
+#         (cid,)
+#     )
+#     pros = cur.fetchall()
+
+#     cur.execute(
+#         "SELECT cons FROM prosandcons WHERE company_id=%s AND cons IS NOT NULL",
+#         (cid,)
+#     )
+#     cons = cur.fetchall()
+
+#     cur.execute(
+#         "SELECT * FROM balancesheet WHERE company_id=%s ORDER BY year",
+#         (cid,)
+#     )
+#     balancesheet = cur.fetchall()
+
+#     cur.execute(
+#         "SELECT * FROM profitandloss WHERE company_id=%s ORDER BY year",
+#         (cid,)
+#     )
+#     profitandloss = cur.fetchall()
+
+#     cur.execute(
+#         "SELECT * FROM cashflow WHERE company_id=%s ORDER BY year",
+#         (cid,)
+#     )
+#     cashflow = cur.fetchall()
+
+#     cur.execute(
+#         "SELECT * FROM documents WHERE company_id=%s ORDER BY year DESC",
+#         (cid,)
+#     )
+#     documents = cur.fetchall()
+
+#     cur.close()
+#     db.close()
+
+#     return templates.TemplateResponse(
+#         "company.html",
+#         {
+#             "request": request,
+#             "company": company,
+#             "analysis": analysis,
+#             "pros": pros,
+#             "cons": cons,
+#             "balancesheet": balancesheet,
+#             "profitandloss": profitandloss,
+#             "cashflow": cashflow,
+#             "documents": documents
+#         }
+#     )
+
+
+
+
+
+
+
+
+
+
+
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -14,15 +269,13 @@ from starlette.middleware.sessions import SessionMiddleware
 from db_init import init_db
 
 
-# ================= INIT DB (AUTO CREATE TABLES) =================
-init_db()
-
-
 # ================= APP =================
 app = FastAPI()
 
-# ⚠️ SECRET should come from ENV (Render → Environment)
-SESSION_SECRET = os.getenv("SESSION_SECRET", "dev-secret")
+# ❗ MUST be set in Render ENV
+SESSION_SECRET = os.getenv("SESSION_SECRET")
+if not SESSION_SECRET:
+    raise RuntimeError("SESSION_SECRET not set")
 
 app.add_middleware(
     SessionMiddleware,
@@ -34,45 +287,13 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 
-# ================= DB CONNECTION =================
-def get_db():
-    return psycopg2.connect(
-        os.environ["DATABASE_URL"],
-        sslmode="require",
-        cursor_factory=RealDictCursor
-    )
-
-from dotenv import load_dotenv
-load_dotenv()
-
-import os
-import psycopg2
-from psycopg2.extras import RealDictCursor
-
-from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-from starlette.middleware.sessions import SessionMiddleware
-
-from db_init import init_db
-
-# ---------------- APP ----------------
-app = FastAPI()
-app.add_middleware(
-    SessionMiddleware,
-    secret_key=os.getenv("SESSION_SECRET", "dev-secret")
-)
-
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
-
-# ---------------- STARTUP ----------------
+# ================= STARTUP =================
 @app.on_event("startup")
 def startup():
-    init_db()   # 👈 tables auto-create (NO render shell needed)
+    init_db()   # tables auto-create on deploy
 
-# ---------------- DB ----------------
+
+# ================= DB =================
 def get_db():
     return psycopg2.connect(
         os.environ["DATABASE_URL"],
@@ -81,9 +302,7 @@ def get_db():
     )
 
 
-
-
-# ================= HOME =================
+# ================= HOME (ONLY FULL DATA) =================
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
     db = get_db()
@@ -93,21 +312,17 @@ def home(request: Request):
         SELECT DISTINCT c.company_id, c.company_name
         FROM companies c
         WHERE
-            EXISTS (
-                SELECT 1 FROM analysis a
-                WHERE a.company_id = c.company_id
-            )
+            EXISTS (SELECT 1 FROM analysis a WHERE a.company_id = c.company_id)
         AND EXISTS (
-                SELECT 1 FROM prosandcons pc
-                WHERE pc.company_id = c.company_id
-                  AND (pc.pros IS NOT NULL OR pc.cons IS NOT NULL)
-            )
+            SELECT 1 FROM prosandcons pc
+            WHERE pc.company_id = c.company_id
+              AND (pc.pros IS NOT NULL OR pc.cons IS NOT NULL)
+        )
         ORDER BY c.company_name
         LIMIT 5
     """)
 
     examples = cur.fetchall()
-
     cur.close()
     db.close()
 
@@ -115,11 +330,7 @@ def home(request: Request):
 
     return templates.TemplateResponse(
         "home.html",
-        {
-            "request": request,
-            "examples": examples,   # dicts → c.company_id works
-            "error": error
-        }
+        {"request": request, "examples": examples, "error": error}
     )
 
 
@@ -147,7 +358,7 @@ def search(q: str, request: Request):
     return RedirectResponse(f"/company/{row['company_id']}", status_code=302)
 
 
-# ================= COMPANIES LIST =================
+# ================= COMPANY LIST (ALL COMPANIES) =================
 @app.get("/companies", response_class=HTMLResponse)
 def companies(request: Request):
     db = get_db()
@@ -165,10 +376,7 @@ def companies(request: Request):
 
     return templates.TemplateResponse(
         "list.html",
-        {
-            "request": request,
-            "companies": companies
-        }
+        {"request": request, "companies": companies}
     )
 
 
@@ -186,44 +394,17 @@ def company(cid: str, request: Request):
         db.close()
         return HTMLResponse("Company not found", status_code=404)
 
-    cur.execute("SELECT * FROM analysis WHERE company_id=%s", (cid,))
-    analysis = cur.fetchall()
+    def q(sql):
+        cur.execute(sql, (cid,))
+        return cur.fetchall()
 
-    cur.execute(
-        "SELECT pros FROM prosandcons WHERE company_id=%s AND pros IS NOT NULL",
-        (cid,)
-    )
-    pros = cur.fetchall()
-
-    cur.execute(
-        "SELECT cons FROM prosandcons WHERE company_id=%s AND cons IS NOT NULL",
-        (cid,)
-    )
-    cons = cur.fetchall()
-
-    cur.execute(
-        "SELECT * FROM balancesheet WHERE company_id=%s ORDER BY year",
-        (cid,)
-    )
-    balancesheet = cur.fetchall()
-
-    cur.execute(
-        "SELECT * FROM profitandloss WHERE company_id=%s ORDER BY year",
-        (cid,)
-    )
-    profitandloss = cur.fetchall()
-
-    cur.execute(
-        "SELECT * FROM cashflow WHERE company_id=%s ORDER BY year",
-        (cid,)
-    )
-    cashflow = cur.fetchall()
-
-    cur.execute(
-        "SELECT * FROM documents WHERE company_id=%s ORDER BY year DESC",
-        (cid,)
-    )
-    documents = cur.fetchall()
+    analysis = q("SELECT * FROM analysis WHERE company_id=%s")
+    pros = q("SELECT pros FROM prosandcons WHERE company_id=%s AND pros IS NOT NULL")
+    cons = q("SELECT cons FROM prosandcons WHERE company_id=%s AND cons IS NOT NULL")
+    balancesheet = q("SELECT * FROM balancesheet WHERE company_id=%s ORDER BY year")
+    profitandloss = q("SELECT * FROM profitandloss WHERE company_id=%s ORDER BY year")
+    cashflow = q("SELECT * FROM cashflow WHERE company_id=%s ORDER BY year")
+    documents = q("SELECT * FROM documents WHERE company_id=%s ORDER BY year DESC")
 
     cur.close()
     db.close()
