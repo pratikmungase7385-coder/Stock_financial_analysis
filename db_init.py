@@ -11,18 +11,7 @@ def init_db():
     )
     cur = db.cursor()
 
-    # 🔥 HARD RESET (ONLY WHEN YOU WANT CLEAN START)
-    cur.execute("""
-    DROP TABLE IF EXISTS
-        documents,
-        cashflow,
-        profitandloss,
-        balancesheet,
-        prosandcons,
-        analysis,
-        companies
-    CASCADE;
-    """)
+    
 
     # ================= CREATE TABLES =================
     cur.execute("""
