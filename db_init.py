@@ -11,7 +11,7 @@ def init_db():
     )
     cur = db.cursor()
 
-    # 🔥 ONE-TIME HARD RESET (REMOVE AFTER FIRST DEPLOY)
+    # 🔥 HARD RESET (ONLY WHEN YOU WANT CLEAN START)
     cur.execute("""
     DROP TABLE IF EXISTS
         documents,
@@ -24,7 +24,7 @@ def init_db():
     CASCADE;
     """)
 
-    # ✅ RECREATE TABLES
+    # ================= CREATE TABLES =================
     cur.execute("""
     CREATE TABLE companies (
         company_id VARCHAR(20) PRIMARY KEY,
@@ -60,7 +60,7 @@ def init_db():
     CREATE TABLE balancesheet (
         id SERIAL PRIMARY KEY,
         company_id VARCHAR(20),
-        year VARCHAR(20),
+        year VARCHAR(10),
         equity_capital VARCHAR(20),
         reserves BIGINT,
         borrowings BIGINT,
@@ -76,7 +76,7 @@ def init_db():
     CREATE TABLE profitandloss (
         id SERIAL PRIMARY KEY,
         company_id VARCHAR(20),
-        year VARCHAR(20),
+        year VARCHAR(10),
         sales BIGINT,
         expenses BIGINT,
         operating_profit BIGINT,
@@ -94,7 +94,7 @@ def init_db():
     CREATE TABLE cashflow (
         id SERIAL PRIMARY KEY,
         company_id VARCHAR(20),
-        year VARCHAR(20),
+        year VARCHAR(10),
         operating_activity BIGINT,
         investing_activity BIGINT,
         financing_activity BIGINT,
@@ -112,7 +112,9 @@ def init_db():
     db.commit()
     cur.close()
     db.close()
+
     print("🔥 HARD RESET DONE + TABLES RECREATED")
+
 
 if __name__ == "__main__":
     init_db()
