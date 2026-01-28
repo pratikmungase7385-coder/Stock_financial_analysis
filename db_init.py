@@ -4,6 +4,7 @@ load_dotenv()
 import os
 import psycopg2
 
+
 def init_db():
     db = psycopg2.connect(
         os.environ["DATABASE_URL"],
@@ -11,7 +12,16 @@ def init_db():
     )
     cur = db.cursor()
 
-    
+    # ================= HARD RESET (SAFE ORDER) =================
+    cur.execute("""
+        DROP TABLE IF EXISTS documents;
+        DROP TABLE IF EXISTS cashflow;
+        DROP TABLE IF EXISTS profitandloss;
+        DROP TABLE IF EXISTS balancesheet;
+        DROP TABLE IF EXISTS prosandcons;
+        DROP TABLE IF EXISTS analysis;
+        DROP TABLE IF EXISTS companies;
+    """)
 
     # ================= CREATE TABLES =================
     cur.execute("""

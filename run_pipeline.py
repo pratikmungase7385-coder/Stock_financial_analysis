@@ -1,7 +1,3 @@
-
-
-
-
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -21,11 +17,10 @@ def get_conn():
 
 
 # ================= GENERIC INSERT =================
-def insert_rows(conn, table, rows, cols):
+def insert_rows(cur, table, rows, cols):
     if not rows:
         return
 
-    cur = conn.cursor()
     placeholders = ",".join(["%s"] * len(cols))
     col_str = ",".join(cols)
 
@@ -37,10 +32,8 @@ def insert_rows(conn, table, rows, cols):
                 values
             )
         except Exception as e:
-            conn.rollback()
+            # ❗ row skip only, no rollback
             print(f"⚠️ Skipped row in {table}: {e}")
-
-    cur.close()
 
 
 # ================= MAIN PIPELINE =================
@@ -69,8 +62,8 @@ def main():
 
         cur = conn.cursor()
 
-        # ---------- COMPANIES ----------
         try:
+            # ---------- COMPANIES ----------
             cur.execute("""
                 INSERT INTO companies (
                     company_id, company_logo, company_name, chart_link,
@@ -92,69 +85,68 @@ def main():
                 company.get("roce_percentage"),
                 company.get("roe_percentage")
             ))
+
+            # ---------- ANALYSIS ----------
+            insert_rows(cur, "analysis", d.get("analysis", []), [
+                "company_id",
+                "compounded_sales_growth",
+                "compounded_profit_growth",
+                "stock_price_cagr",
+                "roe"
+            ])
+
+            # ---------- PROS & CONS ----------
+            insert_rows(cur, "prosandcons", d.get("prosandcons", []), [
+                "company_id",
+                "pros",
+                "cons"
+            ])
+
+            # ---------- BALANCE SHEET ----------
+            insert_rows(cur, "balancesheet", d.get("balancesheet", []), [
+                "company_id", "year", "equity_capital", "reserves",
+                "borrowings", "other_liabilities", "total_liabilities",
+                "fixed_assets", "cwip", "investments",
+                "other_asset", "total_assets"
+            ])
+
+            # ---------- PROFIT & LOSS ----------
+            insert_rows(cur, "profitandloss", d.get("profitandloss", []), [
+                "company_id", "year", "sales", "expenses",
+                "operating_profit", "opm_percentage", "other_income",
+                "interest", "depreciation", "profit_before_tax",
+                "tax_percentage", "net_profit", "eps", "dividend_payout"
+            ])
+
+            # ---------- CASHFLOW ----------
+            insert_rows(cur, "cashflow", d.get("cashflow", []), [
+                "company_id", "year", "operating_activity",
+                "investing_activity", "financing_activity",
+                "net_cash_flow"
+            ])
+
+            # ---------- DOCUMENTS ----------
+            docs_clean = []
+            for doc in d.get("documents", []):
+                docs_clean.append({
+                    "company_id": cid,
+                    "year": doc.get("Year"),
+                    "annual_report": doc.get("Annual_Report")
+                })
+
+            insert_rows(cur, "documents", docs_clean, [
+                "company_id", "year", "annual_report"
+            ])
+
             conn.commit()
+            print("✅ Saved", cid)
+
         except Exception as e:
             conn.rollback()
-            print("❌ Company insert failed:", e)
+            print("❌ Company failed:", cid, e)
+
+        finally:
             cur.close()
-            continue
-
-        cur.close()
-
-        # ---------- ANALYSIS ----------
-        insert_rows(conn, "analysis", d.get("analysis", []), [
-            "company_id",
-            "compounded_sales_growth",
-            "compounded_profit_growth",
-            "stock_price_cagr",
-            "roe"
-        ])
-
-        # ---------- PROS & CONS ----------
-        insert_rows(conn, "prosandcons", d.get("prosandcons", []), [
-            "company_id",
-            "pros",
-            "cons"
-        ])
-
-        # ---------- BALANCE SHEET ----------
-        insert_rows(conn, "balancesheet", d.get("balancesheet", []), [
-            "company_id", "year", "equity_capital", "reserves",
-            "borrowings", "other_liabilities", "total_liabilities",
-            "fixed_assets", "cwip", "investments",
-            "other_asset", "total_assets"
-        ])
-
-        # ---------- PROFIT & LOSS ----------
-        insert_rows(conn, "profitandloss", d.get("profitandloss", []), [
-            "company_id", "year", "sales", "expenses",
-            "operating_profit", "opm_percentage", "other_income",
-            "interest", "depreciation", "profit_before_tax",
-            "tax_percentage", "net_profit", "eps", "dividend_payout"
-        ])
-
-        # ---------- CASHFLOW ----------
-        insert_rows(conn, "cashflow", d.get("cashflow", []), [
-            "company_id", "year", "operating_activity",
-            "investing_activity", "financing_activity",
-            "net_cash_flow"
-        ])
-
-        # ---------- DOCUMENTS (🔥 MAIN FIX) ----------
-        docs_clean = []
-        for doc in d.get("documents", []):
-            docs_clean.append({
-                "company_id": cid,
-                "year": doc.get("Year"),                # FIX
-                "annual_report": doc.get("Annual_Report")  # FIX
-            })
-
-        insert_rows(conn, "documents", docs_clean, [
-            "company_id", "year", "annual_report"
-        ])
-
-        conn.commit()
-        print("✅ Saved", cid)
 
         time.sleep(1)  # API safety
 
