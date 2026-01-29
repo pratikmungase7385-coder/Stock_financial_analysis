@@ -279,11 +279,13 @@ def startup():
 
 # ================= DB =================
 def get_db():
-    return psycopg2.connect(
+    conn = psycopg2.connect(
         os.environ["DATABASE_URL"],
         sslmode="require",
-        cursor_factory=RealDictCursor
+        connect_timeout=5
     )
+    conn.autocommit = True
+    return conn
 
 # ================= HOME =================
 @app.get("/", response_class=HTMLResponse)

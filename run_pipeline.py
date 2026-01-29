@@ -16,24 +16,38 @@ def get_conn():
     )
 
 
-# ================= GENERIC INSERT =================
-def insert_rows(cur, table, rows, cols):
+def get_db():
+    conn = psycopg2.connect(
+        os.environ["DATABASE_URL"],
+        sslmode="require",
+        connect_timeout=5
+    )
+    conn.autocommit = True
+    return conn
+
+
+# ================= SAFE INSERT =================
+def insert_rows(conn, table, rows, cols):
     if not rows:
         return
 
-    placeholders = ",".join(["%s"] * len(cols))
-    col_str = ",".join(cols)
-
     for r in rows:
+        cur = conn.cursor()
         try:
             values = [r.get(c) for c in cols]
             cur.execute(
-                f"INSERT INTO {table} ({col_str}) VALUES ({placeholders})",
+                f"""
+                INSERT INTO {table} ({','.join(cols)})
+                VALUES ({','.join(['%s'] * len(cols))})
+                """,
                 values
             )
+            conn.commit()
         except Exception as e:
-            # ❗ row skip only, no rollback
-            print(f"⚠️ Skipped row in {table}: {e}")
+            conn.rollback()
+            print(f"⚠️ {table} skipped:", e)
+        finally:
+            cur.close()
 
 
 # ================= MAIN PIPELINE =================
@@ -60,16 +74,16 @@ def main():
             print("❌ Invalid API structure")
             continue
 
-        cur = conn.cursor()
-
         try:
             # ---------- COMPANIES ----------
+            cur = conn.cursor()
             cur.execute("""
                 INSERT INTO companies (
                     company_id, company_logo, company_name, chart_link,
                     about_company, website, nse_profile, bse_profile,
                     face_value, book_value, roce_percentage, roe_percentage
-                ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                )
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
                 ON CONFLICT (company_id) DO NOTHING
             """, (
                 company.get("id"),
@@ -85,9 +99,11 @@ def main():
                 company.get("roce_percentage"),
                 company.get("roe_percentage")
             ))
+            conn.commit()
+            cur.close()
 
             # ---------- ANALYSIS ----------
-            insert_rows(cur, "analysis", d.get("analysis", []), [
+            insert_rows(conn, "analysis", d.get("analysis", []), [
                 "company_id",
                 "compounded_sales_growth",
                 "compounded_profit_growth",
@@ -96,14 +112,12 @@ def main():
             ])
 
             # ---------- PROS & CONS ----------
-            insert_rows(cur, "prosandcons", d.get("prosandcons", []), [
-                "company_id",
-                "pros",
-                "cons"
+            insert_rows(conn, "prosandcons", d.get("prosandcons", []), [
+                "company_id", "pros", "cons"
             ])
 
             # ---------- BALANCE SHEET ----------
-            insert_rows(cur, "balancesheet", d.get("balancesheet", []), [
+            insert_rows(conn, "balancesheet", d.get("balancesheet", []), [
                 "company_id", "year", "equity_capital", "reserves",
                 "borrowings", "other_liabilities", "total_liabilities",
                 "fixed_assets", "cwip", "investments",
@@ -111,7 +125,7 @@ def main():
             ])
 
             # ---------- PROFIT & LOSS ----------
-            insert_rows(cur, "profitandloss", d.get("profitandloss", []), [
+            insert_rows(conn, "profitandloss", d.get("profitandloss", []), [
                 "company_id", "year", "sales", "expenses",
                 "operating_profit", "opm_percentage", "other_income",
                 "interest", "depreciation", "profit_before_tax",
@@ -119,34 +133,28 @@ def main():
             ])
 
             # ---------- CASHFLOW ----------
-            insert_rows(cur, "cashflow", d.get("cashflow", []), [
+            insert_rows(conn, "cashflow", d.get("cashflow", []), [
                 "company_id", "year", "operating_activity",
                 "investing_activity", "financing_activity",
                 "net_cash_flow"
             ])
 
-            # ---------- DOCUMENTS ----------
-            docs_clean = []
-            for doc in d.get("documents", []):
-                docs_clean.append({
-                    "company_id": cid,
-                    "year": doc.get("Year"),
-                    "annual_report": doc.get("Annual_Report")
-                })
+            # ---------- DOCUMENTS (FIXED KEYS) ----------
+            docs_clean = [{
+                "company_id": cid,
+                "year": doc.get("Year"),
+                "annual_report": doc.get("Annual_Report")
+            } for doc in d.get("documents", [])]
 
-            insert_rows(cur, "documents", docs_clean, [
+            insert_rows(conn, "documents", docs_clean, [
                 "company_id", "year", "annual_report"
             ])
 
-            conn.commit()
             print("✅ Saved", cid)
 
         except Exception as e:
             conn.rollback()
-            print("❌ Company failed:", cid, e)
-
-        finally:
-            cur.close()
+            print("❌ Failed:", cid, e)
 
         time.sleep(1)  # API safety
 
