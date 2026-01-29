@@ -282,7 +282,7 @@ def get_db():
     conn = psycopg2.connect(
         os.environ["DATABASE_URL"],
         sslmode="require",
-        connect_timeout=5
+        
     )
     conn.autocommit = True
     return conn
