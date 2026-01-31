@@ -6,6 +6,9 @@
     <title>{{ company.company_name }}</title>
     
     <link rel="stylesheet" href="/static/company.css">
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 
 </head>
 <body>
@@ -318,7 +321,145 @@ a {
 
 
 
+<style>
+    
+            body {
+            margin:0;
+            font-family: "Segoe UI", sans-serif;
+            background:#f7f8fc;
+        }
+/* =======================
+   APP BANNER
+======================= */
+.app-banner {
+  background: linear-gradient(90deg, #3b49f5, #8f2de2);
+  padding: 80px 20px;
+  text-align: center;
+}
 
+.app-banner h2 {
+  color: #fff;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+.app-banner h2 span {
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.store-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.store-buttons img {
+  height: 55px;
+  transition: transform 0.3s ease;
+}
+
+.store-buttons img:hover {
+  transform: scale(1.08);
+}
+.footer {
+  background: #ffffff;
+  padding: 60px 8% 20px;
+  border-top: 2px solid #e6e6e6;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.footer-column {
+  flex: 1;
+  min-width: 220px;
+}
+
+.footer-column h3,
+.footer-column h4 {
+  color: #003366;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.footer-column p {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* Quick Links */
+.quick-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.quick-links li {
+  margin-bottom: 10px;
+}
+
+.quick-links li a {
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  color: #1b1b1b;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.quick-links li a span {
+  margin-right: 8px;
+  color: #6b9af9;
+  font-size: 18px;
+}
+
+.quick-links li a:hover {
+  color: #0056ff;
+}
+
+/* Social Icons */
+.social-icons a {
+  font-size: 20px;
+  margin-right: 12px;
+  color: #0056ff;
+  transition: color 0.3s ease;
+}
+
+.social-icons a:hover {
+  color: #0a1b4c;
+}
+
+/* Bottom */
+.footer-bottom {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 15px;
+  border-top: 1px solid #e3e3e3;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .social-icons {
+    margin-top: 10px;
+  }
+}
+
+</style>
 
 <!-- App Banner -->
 <section class="app-banner">
@@ -349,7 +490,7 @@ a {
       <ul class="quick-links">
         <li><a href="/"><span>›</span>Home</a></li>
         <li><a href="/companies"><span>›</span>All Companies</a></li>
-        <li><a href="/search"><span>›</span>Search</a></li>
+        <li><a href="/"><span>›</span>Search</a></li>
         <li><a href="https://bluestock.in/"><span>›</span>Market</a></li>
       </ul>
     </div>
