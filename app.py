@@ -11,8 +11,6 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 
-from db_init import init_db
-
 # ================= APP =================
 app = FastAPI()
 
@@ -24,10 +22,7 @@ app.add_middleware(
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-# ================= STARTUP =================
-
-
-# ================= DB (🔥 CORRECT WAY) =================
+# ================= DB (RENDER SAFE) =================
 def get_db():
     conn = psycopg2.connect(
         os.environ["DATABASE_URL"],
@@ -35,8 +30,9 @@ def get_db():
         connect_timeout=5,
         cursor_factory=RealDictCursor
     )
-    conn.autocommit = True   # 🔥 VERY IMPORTANT on Render
+    conn.autocommit = True   # 🔥 VERY IMPORTANT
     return conn
+
 
 # ================= HOME =================
 @app.get("/", response_class=HTMLResponse)
@@ -44,6 +40,7 @@ def home(request: Request):
     db = get_db()
     cur = db.cursor()
 
+    # 🔥 sirf woh companies jinka data ACTUALLY present hai
     cur.execute("""
         SELECT DISTINCT c.company_id, c.company_name
         FROM companies c
@@ -66,8 +63,12 @@ def home(request: Request):
 
     return templates.TemplateResponse(
         "home.html",
-        {"request": request, "examples": examples}
+        {
+            "request": request,
+            "examples": examples
+        }
     )
+
 
 # ================= SEARCH =================
 @app.get("/search")
@@ -78,7 +79,8 @@ def search(q: str, request: Request):
     cur.execute("""
         SELECT company_id
         FROM companies
-        WHERE company_id ILIKE %s OR company_name ILIKE %s
+        WHERE company_id ILIKE %s
+           OR company_name ILIKE %s
         LIMIT 1
     """, (f"%{q}%", f"%{q}%"))
 
@@ -92,6 +94,7 @@ def search(q: str, request: Request):
         return RedirectResponse("/", status_code=302)
 
     return RedirectResponse(f"/company/{row['company_id']}", status_code=302)
+
 
 # ================= ALL COMPANIES =================
 @app.get("/companies", response_class=HTMLResponse)
@@ -112,8 +115,12 @@ def companies(request: Request):
 
     return templates.TemplateResponse(
         "list.html",
-        {"request": request, "companies": companies}
+        {
+            "request": request,
+            "companies": companies
+        }
     )
+
 
 # ================= COMPANY PAGE =================
 @app.get("/company/{cid}", response_class=HTMLResponse)
@@ -132,22 +139,40 @@ def company(cid: str, request: Request):
     cur.execute("SELECT * FROM analysis WHERE company_id=%s", (cid,))
     analysis = cur.fetchall()
 
-    cur.execute("SELECT pros FROM prosandcons WHERE company_id=%s AND pros IS NOT NULL", (cid,))
+    cur.execute(
+        "SELECT pros FROM prosandcons WHERE company_id=%s AND pros IS NOT NULL",
+        (cid,)
+    )
     pros = cur.fetchall()
 
-    cur.execute("SELECT cons FROM prosandcons WHERE company_id=%s AND cons IS NOT NULL", (cid,))
+    cur.execute(
+        "SELECT cons FROM prosandcons WHERE company_id=%s AND cons IS NOT NULL",
+        (cid,)
+    )
     cons = cur.fetchall()
 
-    cur.execute("SELECT * FROM balancesheet WHERE company_id=%s ORDER BY year", (cid,))
+    cur.execute(
+        "SELECT * FROM balancesheet WHERE company_id=%s ORDER BY year",
+        (cid,)
+    )
     balancesheet = cur.fetchall()
 
-    cur.execute("SELECT * FROM profitandloss WHERE company_id=%s ORDER BY year", (cid,))
+    cur.execute(
+        "SELECT * FROM profitandloss WHERE company_id=%s ORDER BY year",
+        (cid,)
+    )
     profitandloss = cur.fetchall()
 
-    cur.execute("SELECT * FROM cashflow WHERE company_id=%s ORDER BY year", (cid,))
+    cur.execute(
+        "SELECT * FROM cashflow WHERE company_id=%s ORDER BY year",
+        (cid,)
+    )
     cashflow = cur.fetchall()
 
-    cur.execute("SELECT * FROM documents WHERE company_id=%s ORDER BY year DESC", (cid,))
+    cur.execute(
+        "SELECT * FROM documents WHERE company_id=%s ORDER BY year DESC",
+        (cid,)
+    )
     documents = cur.fetchall()
 
     cur.close()
