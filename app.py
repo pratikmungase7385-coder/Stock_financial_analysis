@@ -25,9 +25,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 # ================= STARTUP =================
-@app.on_event("startup")
-def startup():
-    init_db()   # ONLY schema ensure, NEVER delete data here
+
 
 # ================= DB (🔥 CORRECT WAY) =================
 def get_db():
