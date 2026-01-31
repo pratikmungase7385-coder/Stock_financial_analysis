@@ -13,6 +13,15 @@ def init_db():
     cur = db.cursor()
 
    
+    cur.execute("""
+       DROP TABLE IF EXISTS documents;
+       DROP TABLE IF EXISTS cashflow;
+       DROP TABLE IF EXISTS profitandloss;
+       DROP TABLE IF EXISTS balancesheet;
+       DROP TABLE IF EXISTS prosandcons;
+       DROP TABLE IF EXISTS analysis;
+       DROP TABLE IF EXISTS companies;
+""")
 
     # ================= CREATE TABLES =================
     cur.execute("""
