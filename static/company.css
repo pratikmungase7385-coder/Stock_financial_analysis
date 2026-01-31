@@ -376,12 +376,8 @@ body {
 .store-buttons img:hover {
   transform: scale(1.08);
 }
-
-/* =======================
-   FOOTER
-======================= */
 .footer {
-  background-color: #ffffff;
+  background: #ffffff;
   padding: 60px 8% 20px;
   border-top: 2px solid #e6e6e6;
 }
@@ -389,8 +385,8 @@ body {
 .footer-container {
   display: flex;
   justify-content: space-between;
-  flex-wrap: wrap;
   gap: 40px;
+  flex-wrap: wrap;
 }
 
 .footer-column {
@@ -400,18 +396,20 @@ body {
 
 .footer-column h3,
 .footer-column h4 {
+  color: #003366;
   font-weight: 600;
   margin-bottom: 15px;
-  color: #003366;
 }
 
 .footer-column p {
-  color: #555;
   font-size: 0.95rem;
+  color: #555;
   line-height: 1.6;
 }
+
+/* Quick Links */
 .quick-links {
-  list-style: none;          /* remove bullets */
+  list-style: none;
   padding: 0;
   margin: 0;
 }
@@ -421,17 +419,17 @@ body {
 }
 
 .quick-links li a {
-  text-decoration: none;     /* remove underline */
-  color: #1b1b1b;            /* normal text */
   display: flex;
   align-items: center;
   font-size: 15px;
+  color: #1b1b1b;
+  text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .quick-links li a span {
-  color: #6b9af9;            /* arrow color */
   margin-right: 8px;
+  color: #6b9af9;
   font-size: 18px;
 }
 
@@ -439,13 +437,11 @@ body {
   color: #0056ff;
 }
 
-/* =======================
-   SOCIAL ICONS
-======================= */
+/* Social Icons */
 .social-icons a {
   font-size: 20px;
-  color: #0056ff;
   margin-right: 12px;
+  color: #0056ff;
   transition: color 0.3s ease;
 }
 
@@ -453,21 +449,17 @@ body {
   color: #0a1b4c;
 }
 
-/* =======================
-   FOOTER BOTTOM
-======================= */
+/* Bottom */
 .footer-bottom {
   text-align: center;
-  border-top: 1px solid #e3e3e3;
   margin-top: 40px;
   padding-top: 15px;
+  border-top: 1px solid #e3e3e3;
   font-size: 0.9rem;
   color: #555;
 }
 
-/* =======================
-   RESPONSIVE
-======================= */
+/* Responsive */
 @media (max-width: 768px) {
   .footer-container {
     flex-direction: column;
