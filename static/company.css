@@ -313,3 +313,168 @@ tr:hover{
     font-weight:600;
     align-items: center;
 }
+
+
+
+
+
+
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+/* =======================
+   RESET
+======================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* =======================
+   GLOBAL
+======================= */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(90deg, #d9d9ed, #f9f9fa);
+  color: #222;
+}
+
+/* =======================
+   APP BANNER
+======================= */
+.app-banner {
+  background: linear-gradient(90deg, #3b49f5, #8f2de2);
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.app-banner h2 {
+  color: #fff;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+.app-banner h2 span {
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.store-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.store-buttons img {
+  height: 55px;
+  transition: transform 0.3s ease;
+}
+
+.store-buttons img:hover {
+  transform: scale(1.08);
+}
+
+/* =======================
+   FOOTER
+======================= */
+.footer {
+  background-color: #ffffff;
+  padding: 60px 8% 20px;
+  border-top: 2px solid #e6e6e6;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+.footer-column {
+  flex: 1;
+  min-width: 220px;
+}
+
+.footer-column h3,
+.footer-column h4 {
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #003366;
+}
+
+.footer-column p {
+  color: #555;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.quick-links {
+  list-style: none;          /* remove bullets */
+  padding: 0;
+  margin: 0;
+}
+
+.quick-links li {
+  margin-bottom: 10px;
+}
+
+.quick-links li a {
+  text-decoration: none;     /* remove underline */
+  color: #1b1b1b;            /* normal text */
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  transition: color 0.3s ease;
+}
+
+.quick-links li a span {
+  color: #6b9af9;            /* arrow color */
+  margin-right: 8px;
+  font-size: 18px;
+}
+
+.quick-links li a:hover {
+  color: #0056ff;
+}
+
+/* =======================
+   SOCIAL ICONS
+======================= */
+.social-icons a {
+  font-size: 20px;
+  color: #0056ff;
+  margin-right: 12px;
+  transition: color 0.3s ease;
+}
+
+.social-icons a:hover {
+  color: #0a1b4c;
+}
+
+/* =======================
+   FOOTER BOTTOM
+======================= */
+.footer-bottom {
+  text-align: center;
+  border-top: 1px solid #e3e3e3;
+  margin-top: 40px;
+  padding-top: 15px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* =======================
+   RESPONSIVE
+======================= */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .social-icons {
+    margin-top: 10px;
+  }
+}
