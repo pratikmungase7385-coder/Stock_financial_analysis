@@ -129,26 +129,15 @@ a {
   color: #777;
 }
 
-.search-container {
-  position: relative; /* REQUIRED for absolute child */
-}
-
 .search-error {
   position: absolute;
   top: -20px;
   left: 0;
-
   padding: 12px 20px;
   font-size: 14px;
   font-weight: 600;
   color: #373434;
-  background: #fee2e2;
   border-radius: 12px;
-
-  opacity: 1;
-  transform: translateY(0);
-
-  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 /* =======================
