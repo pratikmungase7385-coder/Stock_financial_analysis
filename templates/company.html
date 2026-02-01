@@ -317,98 +317,16 @@ a {
 
 
 
-<div class="next">
+
+</div>
+
 <style>
     
-
-/* =======================
-   NEXT WRAPPER (BASE)
-======================= */
-.next {
-  max-width: 1350px;
-  margin: 0 auto;
-  padding: 0 20px;
-  gap: 10px;
-}
-
-/* =======================
-   FULL-WIDTH BREAKOUT
-======================= */
-.app-banner,
 .footer {
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  width: 100vw;
-}
-/* =======================
-   NEXT WRAPPER (BASE)
-======================= */
-.next {
-  max-width: 1350px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-/* =======================
-   FULL-WIDTH BREAKOUT
-======================= */
-.app-banner,
-.footer {
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  width: 100vw;
-}
-
-/* =======================
-   APP BANNER
-======================= */
-.app-banner {
-  background: linear-gradient(90deg, #3b49f5, #8f2de2);
-  padding: 90px 0;
-  text-align: center;
-}
-
-.app-banner h2 {
-  color: #fff;
-  font-size: 34px;
-  font-weight: 700;
-  margin-bottom: 35px;
-}
-
-.store-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 22px;
-  flex-wrap: wrap;
-}
-
-.store-buttons img {
-  height: 58px;
-  transition: transform 0.25s ease;
-}
-
-.store-buttons img:hover {
-  transform: scale(1.08);
-}
-
-/* =======================
-   FOOTER
-======================= */
-.footer {
-  background: #fff;
+  background: #ffffff;
+  padding: 60px 8% 20px;
   border-top: 2px solid #e6e6e6;
-}
-
-.footer-inner {
-  max-width: 1350px;
-  margin: 0 auto;
-  padding: 60px 20px 20px;
+  
 }
 
 .footer-container {
@@ -433,9 +351,10 @@ a {
 .footer-column p {
   font-size: 0.95rem;
   color: #555;
+  line-height: 1.6;
 }
 
-/* Links */
+/* Quick Links */
 .quick-links {
   list-style: none;
   padding: 0;
@@ -452,22 +371,32 @@ a {
   font-size: 15px;
   color: #1b1b1b;
   text-decoration: none;
+  transition: color 0.3s ease;
 }
 
 .quick-links li a span {
   margin-right: 8px;
   color: #6b9af9;
+  font-size: 18px;
 }
 
-/* Social */
+.quick-links li a:hover {
+  color: #0056ff;
+}
+
+/* Social Icons */
 .social-icons a {
   font-size: 20px;
   margin-right: 12px;
   color: #0056ff;
-  text-decoration: none;
+  transition: color 0.3s ease;
 }
 
-/* Footer bottom */
+.social-icons a:hover {
+  color: #0a1b4c;
+}
+
+/* Bottom */
 .footer-bottom {
   text-align: center;
   margin-top: 40px;
@@ -477,78 +406,61 @@ a {
   color: #555;
 }
 
-/* =======================
-   SAFETY (REQUIRED)
-======================= */
-html, body {
-  overflow-x: hidden;
-}
-
-/* =======================
-   RESPONSIVE
-======================= */
+/* Responsive */
 @media (max-width: 768px) {
   .footer-container {
     flex-direction: column;
     text-align: center;
   }
+
+  .social-icons {
+    margin-top: 10px;
+  }
 }
 
 </style>
 
-<!-- App Banner -->
-<section class="app-banner">
-  <h2>Stock analyzer is Live Now! <span>(Early Access)</span></h2>
-
-  <div class="store-buttons">
-    <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"></a>
-    <a href="#"><img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"></a>
-    <a href="#"><img src="https://aistechx.com/store/1/app/indus.png"></a>
-  </div>
-</section>
+<!-- FOOTER -->
 <footer class="footer">
-  <div class="footer-container">
+  <div class="footer-inner">
+    <div class="footer-container">
 
-    <!-- Column 1 -->
-    <div class="footer-column">
-      <h3>Stock Financial Analysis</h3>
-      <p>
-        Fundamental analysis of Indian listed companies using real financial data.
-      </p>
-      <p><strong>Data Source:</strong> NSE / BSE</p>
-      <p><strong>Email:</strong> support@stockanalysis.in</p>
-    </div>
-
-    <!-- Column 2 -->
-    <div class="footer-column">
-      <h4>Quick Links</h4>
-      <ul class="quick-links">
-        <li><a href="/"><span>›</span>Home</a></li>
-        <li><a href="/companies"><span>›</span>All Companies</a></li>
-        <li><a href="/"><span>›</span>Search</a></li>
-        <li><a href="https://bluestock.in/"><span>›</span>Market</a></li>
-      </ul>
-    </div>
-
-    <!-- Column 3 -->
-    <div class="footer-column">
-      <h4>Follow Us</h4>
-      <p>Unlock the future of finance with Bluestock Fintech - follow us for exclusive insights and updates!</p>
-      <div class="social-icons">
-        <a href="https://www.facebook.com/"><i class="fab fa-facebook"></i></a>
-        <a href="https://www.instagram.com/"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.linkedin.com/"><i class="fab fa-linkedin"></i></a>
+      <div class="footer-column">
+        <h3>Stock Financial Analysis</h3>
+        <p>Fundamental analysis of Indian listed companies.</p>
+        <p><strong>Data Source:</strong> NSE / BSE</p>
+        <p><strong>Email:</strong> support@stockanalysis.in</p>
       </div>
+
+      <div class="footer-column">
+        <h4>Quick Links</h4>
+        <ul class="quick-links">
+          <li><a href="/"><span>›</span>Home</a></li>
+          <li><a href="/companies"><span>›</span>All Companies</a></li>
+          <li><a href="/"><span>›</span>Search</a></li>
+          <li><a href="https://bluestock.in/"><span>›</span>Market</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-column">
+        <h4>Follow Us</h4>
+        <p>Unlock the future of finance with StockAnalyzer - follow us for exclusive insights and updates!</p>
+        <div class="social-icons">
+          <a href="https://www.facebook.com/" target="_blank"><i class="fab fa-facebook"></i></a>
+          <a href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.linkedin.com/" target="_blank"><i class="fab fa-linkedin"></i></a>
+        </div>
+      </div>
+
     </div>
 
-  </div>
-
-  <div class="footer-bottom">
-    © Stock Financial Analysis | Fintech Platforms for a Growing India. 🇮🇳
+    <div class="footer-bottom">
+      © Stock Financial Analysis | Fintech Platforms for a Growing India. 🇮🇳
+    </div>
   </div>
 </footer>
 
-</div>
-</div>
+
+
 </body>
 </html>
