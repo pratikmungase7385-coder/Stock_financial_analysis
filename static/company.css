@@ -275,8 +275,63 @@ td {
 
 tr:hover {
   background: #f8fafc;
+
 }
 
 
 
+/* =======================
+   DOCUMENTS LIST WRAPPER
+======================= */
+.documents-list {
+  max-width: 900px;   /* control width */
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+/* =======================
+   HEADER
+======================= */
+.doc-header {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  background: #f1f5f9;
+  padding: 14px 18px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* =======================
+   ROWS
+======================= */
+.doc-row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  padding: 14px 18px;
+  border-bottom: 1px solid #e5e7eb;
+  align-items: center;
+}
+
+.doc-row:last-child {
+  border-bottom: none;
+}
+
+.doc-row:hover {
+  background: #f8fafc;
+}
+
+/* =======================
+   LINKS
+======================= */
+.doc-row a {
+  color: #2563eb;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.doc-row a:hover {
+  text-decoration: underline;
+}
 
