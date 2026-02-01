@@ -1,0 +1,232 @@
+
+
+/* ================= GLOBAL ================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #f3f6fb;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  color: #1f2937;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* ================= NAVBAR ================= */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #6a0cff, #7b2cff);
+  padding: 18px 40px;
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(106,12,255,0.35);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.name {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  width: 30px;
+  height: 30px;
+}
+
+.name b {
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+}
+
+.menu a {
+  color: white;
+  margin-left: 30px;
+  font-weight: 500;
+  position: relative;
+}
+
+.menu a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0%;
+  height: 2px;
+  background: white;
+  transition: 0.3s;
+}
+
+.menu a:hover::after {
+  width: 100%;
+}
+
+/* ================= PAGE ================= */
+.container {
+  max-width: 1350px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #0b5cff;
+  margin-bottom: 30px;
+}
+
+/* ================= GRID ================= */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 24px;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+}
+
+.card img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.card h3 {
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+.card a {
+  display: inline-block;
+  padding: 8px 18px;
+  background: #2563eb;
+  color: white;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* ================= FULL WIDTH BANNER ================= */
+.app-banner {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  background: linear-gradient(90deg, #3b49f5, #8f2de2);
+  padding: 90px 20px;
+  text-align: center;
+}
+
+.app-banner h2 {
+  color: #fff;
+  font-size: 32px;
+  margin-bottom: 30px;
+}
+
+.store-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.store-buttons img {
+  height: 55px;
+}
+
+/* ================= FOOTER ================= */
+.footer {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  background: #ffffff;
+  border-top: 2px solid #e6e6e6;
+}
+
+.footer-inner {
+  max-width: 1350px;
+  margin: auto;
+  padding: 60px 20px 20px;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.footer-column {
+  flex: 1;
+  min-width: 220px;
+}
+
+.footer-column h3,
+.footer-column h4 {
+  color: #003366;
+  margin-bottom: 15px;
+}
+
+.footer-column p {
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.quick-links {
+  list-style: none;
+}
+
+.quick-links li {
+  margin-bottom: 10px;
+}
+
+.quick-links li a {
+  display: flex;
+  align-items: center;
+  color: #1b1b1b;
+}
+
+.quick-links li a span {
+  margin-right: 8px;
+  color: #6b9af9;
+}
+
+.social-icons a {
+  font-size: 20px;
+  margin-right: 12px;
+  color: #0056ff;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 15px;
+  border-top: 1px solid #e3e3e3;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+  }
+}
