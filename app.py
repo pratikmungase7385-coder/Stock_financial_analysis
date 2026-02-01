@@ -37,10 +37,11 @@ def get_db():
 # ================= HOME =================
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
+    error = request.session.pop("error", None)  # 🔥 THIS LINE WAS MISSING
+
     db = get_db()
     cur = db.cursor()
 
-    # 🔥 sirf woh companies jinka data ACTUALLY present hai
     cur.execute("""
         SELECT DISTINCT c.company_id, c.company_name
         FROM companies c
@@ -65,14 +66,22 @@ def home(request: Request):
         "home.html",
         {
             "request": request,
-            "examples": examples
+            "examples": examples,
+            "error": error   # 🔥 PASS TO TEMPLATE
         }
     )
+
 
 
 # ================= SEARCH =================
 @app.get("/search")
 def search(q: str, request: Request):
+    q = q.strip()
+
+    if not q:
+        request.session["error"] = "Please enter a company name"
+        return RedirectResponse("/", status_code=302)
+
     db = get_db()
     cur = db.cursor()
 

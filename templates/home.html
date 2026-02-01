@@ -52,23 +52,22 @@
 </div>
 
 
+
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const err = document.getElementById("searchError");
-  if (!err) return;
+const err = document.getElementById("searchError");
 
-  setTimeout(() => {
-    err.style.opacity = "0";
-    err.style.transform = "translateY(-8px)";
-    setTimeout(() => err.remove(), 300);
-  }, 7000);
+if (err) {
+    setTimeout(() => {
+        err.style.opacity = "0";
+        err.style.transform = "translateY(-6px)";
+        setTimeout(() => err.remove(), 300);
+    }, 6000);
 
-  if (window.history.replaceState) {
-    window.history.replaceState({}, "", window.location.pathname);
-  }
-});
+    if (window.history.replaceState) {
+        window.history.replaceState({}, "", window.location.pathname);
+    }
+}
 </script>
-
 
 
 
