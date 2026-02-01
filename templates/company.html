@@ -318,7 +318,183 @@ a {
 
 
 <div class="next">
+<style>
+    
 
+/* =======================
+   NEXT WRAPPER (BASE)
+======================= */
+.next {
+  max-width: 1350px;
+  margin: 0 auto;
+  padding: 0 20px;
+  gap: 10px;
+}
+
+/* =======================
+   FULL-WIDTH BREAKOUT
+======================= */
+.app-banner,
+.footer {
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  width: 100vw;
+}
+/* =======================
+   NEXT WRAPPER (BASE)
+======================= */
+.next {
+  max-width: 1350px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* =======================
+   FULL-WIDTH BREAKOUT
+======================= */
+.app-banner,
+.footer {
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  width: 100vw;
+}
+
+/* =======================
+   APP BANNER
+======================= */
+.app-banner {
+  background: linear-gradient(90deg, #3b49f5, #8f2de2);
+  padding: 90px 0;
+  text-align: center;
+}
+
+.app-banner h2 {
+  color: #fff;
+  font-size: 34px;
+  font-weight: 700;
+  margin-bottom: 35px;
+}
+
+.store-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  flex-wrap: wrap;
+}
+
+.store-buttons img {
+  height: 58px;
+  transition: transform 0.25s ease;
+}
+
+.store-buttons img:hover {
+  transform: scale(1.08);
+}
+
+/* =======================
+   FOOTER
+======================= */
+.footer {
+  background: #fff;
+  border-top: 2px solid #e6e6e6;
+}
+
+.footer-inner {
+  max-width: 1350px;
+  margin: 0 auto;
+  padding: 60px 20px 20px;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.footer-column {
+  flex: 1;
+  min-width: 220px;
+}
+
+.footer-column h3,
+.footer-column h4 {
+  color: #003366;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.footer-column p {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+/* Links */
+.quick-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.quick-links li {
+  margin-bottom: 10px;
+}
+
+.quick-links li a {
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  color: #1b1b1b;
+  text-decoration: none;
+}
+
+.quick-links li a span {
+  margin-right: 8px;
+  color: #6b9af9;
+}
+
+/* Social */
+.social-icons a {
+  font-size: 20px;
+  margin-right: 12px;
+  color: #0056ff;
+  text-decoration: none;
+}
+
+/* Footer bottom */
+.footer-bottom {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 15px;
+  border-top: 1px solid #e3e3e3;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* =======================
+   SAFETY (REQUIRED)
+======================= */
+html, body {
+  overflow-x: hidden;
+}
+
+/* =======================
+   RESPONSIVE
+======================= */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+</style>
 
 <!-- App Banner -->
 <section class="app-banner">
@@ -357,6 +533,7 @@ a {
     <!-- Column 3 -->
     <div class="footer-column">
       <h4>Follow Us</h4>
+      <p>Unlock the future of finance with Bluestock Fintech - follow us for exclusive insights and updates!</p>
       <div class="social-icons">
         <a href="https://www.facebook.com/"><i class="fab fa-facebook"></i></a>
         <a href="https://www.instagram.com/"><i class="fab fa-instagram"></i></a>
@@ -367,7 +544,7 @@ a {
   </div>
 
   <div class="footer-bottom">
-    © 2025 Stock Financial Analysis
+    © Stock Financial Analysis | Fintech Platforms for a Growing India. 🇮🇳
   </div>
 </footer>
 
