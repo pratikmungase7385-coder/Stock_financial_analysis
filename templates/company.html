@@ -1,27 +1,126 @@
+
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
     <title>{{ company.company_name }}</title>
-
-    <!-- External CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='company.css') }}">
-
-    <!-- Font Awesome -->
+    
+    <link rel="stylesheet" href="/static/company.css">
     <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+
 </head>
 <body>
+<style>
 
-<!-- ================= NAVBAR ================= -->
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(90deg, #6a0cff, #7b2cff);
+    padding: 18px 40px;
+    color: white;
+    box-shadow: 0 6px 18px rgba(106,12,255,0.35);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.name{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.name .logo{
+    width:30px;
+    height:30px;
+    object-fit:contain;
+}
+
+.name b{
+    font-size:22px;
+    font-weight:700;
+    color:white;
+}
+
+
+a {
+  text-decoration: none;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.brand .logo{
+    width:30px;
+    height:30px;
+    object-fit:contain;
+}
+
+.brand span{
+    font-size:22px;
+    font-weight:700;
+    color:white;
+    letter-spacing:.5px;
+}
+
+.menu a {
+    color: white;
+    text-decoration: none;
+    margin-left: 30px;
+    font-weight: 500;
+    position: relative;
+    padding-bottom: 4px;
+}
+
+.menu a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0%;
+    height: 2px;
+    background: white;
+    transition: 0.3s;
+}
+
+.menu a:hover::after {
+    width: 100%;
+}
+
+
+/* Center hero */
+.hero{
+    height:calc(100vh - 70px);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+}
+
+/* Illustration */
+.hero img{
+    width:420px;
+    margin-bottom:20px;
+}
+
+</style>
+
+
+           
 <div class="navbar">
     <div class="brand">
-        <a href="/">
-            <div class="name">
-                <img src="/static/logo.jpeg" class="logo">
-                <b>StockAnalyzer</b>
-            </div>
-        </a>
+            <a href="/"><div class="name">
+        <img src="/static/logo.jpeg" class="logo">
+
+        <b>StockAnalyzer</b></div>
+           </a>
     </div>
 
     <div class="menu">
@@ -30,11 +129,16 @@
     </div>
 </div>
 
+
+
 <div class="container">
 
-<!-- ================= COMPANY HEADER ================= -->
+
+
+<!-- ================= Company Header ================= -->
 <div class="company-card">
     <div class="company-flex">
+
         <div class="logo-box">
             <img src="{{ company.company_logo }}">
         </div>
@@ -43,20 +147,25 @@
             <h1>{{ company.company_name }}</h1>
             <p>{{ company.about_company }}</p>
 
-            <p><b>Website:</b>
+            <p>
+                <b>Website:</b>
                 <a href="{{ company.website }}" target="_blank">{{ company.website }}</a>
             </p>
 
-            <p><b>Symbol:</b> {{ company.company_id }}</p>
+            <p>
+                <b>Chart:</b>
+                <a class="chart-btn" href="{{ company.chart_link }}" target="_blank">
+                    Launch Chart
+                </a>
+            </p>
 
-            <a class="chart-btn" href="{{ company.chart_link }}" target="_blank">
-                Launch Chart
-            </a>
+            <p><b>Symbol:</b> {{ company.company_id }}</p>
         </div>
+
     </div>
 </div>
 
-<!-- ================= ANALYSIS ================= -->
+<!-- ================= Analysis ================= -->
 {% if analysis|length > 0 %}
 <div class="card">
     <h2>Analysis</h2>
@@ -67,35 +176,49 @@
     </div>
 
     <div class="analysis-grid">
-        {% for r in analysis %}
+
         <div class="box">
             <h3>Sales Growth</h3>
-            <p>{{ r.compounded_sales_growth }}</p>
+            {% for r in analysis %}
+                <p>{{ r.compounded_sales_growth }}</p>
+            {% endfor %}
         </div>
+
         <div class="box">
             <h3>Profit Growth</h3>
-            <p>{{ r.compounded_profit_growth }}</p>
+            {% for r in analysis %}
+                <p>{{ r.compounded_profit_growth }}</p>
+            {% endfor %}
         </div>
+
         <div class="box">
             <h3>ROE</h3>
-            <p>{{ r.roe }}</p>
+            {% for r in analysis %}
+                <p>{{ r.roe }}</p>
+            {% endfor %}
         </div>
-        {% endfor %}
+
     </div>
 </div>
 {% endif %}
 
-<!-- ================= PROS & CONS ================= -->
+<!-- ================= Pros & Cons ================= -->
 {% if pros|length > 0 or cons|length > 0 %}
 <div class="card">
     <h2>Pros & Cons</h2>
 
+    <div class="ml-status">
+        <span class="ml-dot"></span>
+        Generated using Machine Learning
+    </div>
+
     <div class="pc">
+
         <div class="pros">
             <h3>Pros</h3>
             <ul>
                 {% for p in pros %}
-                <li>{{ p.pros }}</li>
+                    <li>{{ p.pros }}</li>
                 {% endfor %}
             </ul>
         </div>
@@ -104,15 +227,16 @@
             <h3>Cons</h3>
             <ul>
                 {% for c in cons %}
-                <li>{{ c.cons }}</li>
+                    <li>{{ c.cons }}</li>
                 {% endfor %}
             </ul>
         </div>
+
     </div>
 </div>
 {% endif %}
 
-<!-- ================= TABLES ================= -->
+<!-- ================= Balance Sheet ================= -->
 <div class="card">
 <h2>Balance Sheet</h2>
 <table>
@@ -131,6 +255,7 @@
 </table>
 </div>
 
+<!-- ================= Profit & Loss ================= -->
 <div class="card">
 <h2>Profit & Loss</h2>
 <table>
@@ -149,6 +274,7 @@
 </table>
 </div>
 
+<!-- ================= Cash Flow ================= -->
 <div class="card">
 <h2>Cash Flow</h2>
 <table>
@@ -167,7 +293,8 @@
 </table>
 </div>
 
-<!-- ================= DOCUMENTS ================= -->
+
+
 <div class="documents-list">
     <div class="doc-header">
         <span>Year</span>
@@ -177,57 +304,69 @@
     {% for row in documents %}
     <div class="doc-row">
         <span>{{ row.year }}</span>
-        <a href="{{ row.annual_report }}" target="_blank">View Report</a>
+        <a href="{{ row.annual_report }}"target="_blank">View Report</a>
     </div>
     {% endfor %}
 </div>
 
-</div>
 
-<!-- ================= APP BANNER ================= -->
+
+
+
+
+
+<!-- App Banner -->
 <section class="app-banner">
-    <h2>Stock analyzer is Live Now! <span>(Early Access)</span></h2>
-    <div class="store-buttons">
-        <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"></a>
-        <a href="#"><img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"></a>
-        <a href="#"><img src="https://aistechx.com/store/1/app/indus.png"></a>
-    </div>
+  <h2>Stock analyzer is Live Now! <span>(Early Access)</span></h2>
+
+  <div class="store-buttons">
+    <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"></a>
+    <a href="#"><img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"></a>
+    <a href="#"><img src="https://aistechx.com/store/1/app/indus.png"></a>
+  </div>
 </section>
-
-<!-- ================= FOOTER ================= -->
 <footer class="footer">
-    <div class="footer-container">
-        <div class="footer-column">
-            <h3>Stock Financial Analysis</h3>
-            <p>Fundamental analysis of Indian listed companies using real financial data.</p>
-            <p><strong>Data Source:</strong> NSE / BSE</p>
-            <p><strong>Email:</strong> support@stockanalysis.in</p>
-        </div>
+  <div class="footer-container">
 
-        <div class="footer-column">
-            <h4>Quick Links</h4>
-            <ul class="quick-links">
-                <li><a href="/"><span>›</span>Home</a></li>
-                <li><a href="/companies"><span>›</span>All Companies</a></li>
-                <li><a href="/"><span>›</span>Search</a></li>
-                <li><a href="https://bluestock.in/"><span>›</span>Market</a></li>
-            </ul>
-        </div>
-
-        <div class="footer-column">
-            <h4>Follow Us</h4>
-            <div class="social-icons">
-                <a href="#"><i class="fab fa-facebook"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-linkedin"></i></a>
-            </div>
-        </div>
+    <!-- Column 1 -->
+    <div class="footer-column">
+      <h3>Stock Financial Analysis</h3>
+      <p>
+        Fundamental analysis of Indian listed companies using real financial data.
+      </p>
+      <p><strong>Data Source:</strong> NSE / BSE</p>
+      <p><strong>Email:</strong> support@stockanalysis.in</p>
     </div>
 
-    <div class="footer-bottom">
-        © 2025 Stock Financial Analysis
+    <!-- Column 2 -->
+    <div class="footer-column">
+      <h4>Quick Links</h4>
+      <ul class="quick-links">
+        <li><a href="/"><span>›</span>Home</a></li>
+        <li><a href="/companies"><span>›</span>All Companies</a></li>
+        <li><a href="/"><span>›</span>Search</a></li>
+        <li><a href="https://bluestock.in/"><span>›</span>Market</a></li>
+      </ul>
     </div>
+
+    <!-- Column 3 -->
+    <div class="footer-column">
+      <h4>Follow Us</h4>
+      <div class="social-icons">
+        <a href="https://www.facebook.com/"><i class="fab fa-facebook"></i></a>
+        <a href="https://www.instagram.com/"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.linkedin.com/"><i class="fab fa-linkedin"></i></a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    © 2025 Stock Financial Analysis
+  </div>
 </footer>
 
+
+</div>
 </body>
 </html>
