@@ -187,6 +187,7 @@ h1 {
 .footer-column p {
   color: #555;
   font-size: 0.95rem;
+  margin: 10px;
 }
 
 .quick-links {
