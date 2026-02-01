@@ -8,12 +8,17 @@
 }
 
 /* =======================
-   BODY
+   GLOBAL
 ======================= */
 body {
   background: #f3f6fb;
   font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   color: #1f2937;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
 /* =======================
@@ -52,7 +57,6 @@ body {
 
 .menu a {
   color: #fff;
-  text-decoration: none;
   margin-left: 30px;
   font-weight: 500;
   position: relative;
@@ -84,7 +88,7 @@ body {
 }
 
 /* =======================
-   COMPANY CARD
+   COMPANY HEADER
 ======================= */
 .company-card {
   background: #fff;
@@ -92,6 +96,11 @@ body {
   padding: 50px;
   box-shadow: 0 20px 40px rgba(0,0,0,.06);
   margin-bottom: 50px;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.company-card:hover {
+  transform: translateY(-4px);
 }
 
 .company-flex {
@@ -140,8 +149,7 @@ body {
   border: 2px solid #2563eb;
   color: #2563eb;
   font-weight: 600;
-  text-decoration: none;
-  transition: 0.2s;
+  transition: .2s;
 }
 
 .chart-btn:hover {
@@ -158,6 +166,11 @@ body {
   padding: 40px 50px;
   margin-bottom: 50px;
   box-shadow: 0 20px 40px rgba(0,0,0,.05);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
 }
 
 .card h2 {
@@ -252,14 +265,16 @@ body {
 }
 
 /* =======================
-   TABLE
+   TABLES
 ======================= */
 table {
   width: 100%;
   border-collapse: collapse;
   background: #fff;
   border-radius: 16px;
-  overflow: hidden;
+  overflow-x: auto;
+  display: block;
+  white-space: nowrap;
 }
 
 th {
@@ -356,6 +371,8 @@ tr:hover {
 /* Quick Links */
 .quick-links {
   list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .quick-links li {
@@ -367,7 +384,6 @@ tr:hover {
   align-items: center;
   font-size: 15px;
   color: #1b1b1b;
-  text-decoration: none;
 }
 
 .quick-links li a span {
@@ -382,6 +398,7 @@ tr:hover {
   color: #0056ff;
 }
 
+/* Footer Bottom */
 .footer-bottom {
   text-align: center;
   margin-top: 40px;
