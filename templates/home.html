@@ -52,24 +52,21 @@
 </div>
 
 
-
-
 <script>
-const err = document.getElementById("searchError");
+document.addEventListener("DOMContentLoaded", () => {
+  const err = document.getElementById("searchError");
+  if (!err) return;
 
-if (err) {
-    // fade + remove after 1 second
-    setTimeout(() => {
-        err.style.opacity = "0";
-        err.style.transform = "translateY(-8px)";
-        setTimeout(() => err.remove(), 300);
-    }, 6000);
+  setTimeout(() => {
+    err.style.opacity = "0";
+    err.style.transform = "translateY(-8px)";
+    setTimeout(() => err.remove(), 300);
+  }, 6000);
 
-    // remove any error state from browser history
-    if (window.history.replaceState) {
-        window.history.replaceState({}, "", window.location.pathname);
-    }
-}
+  if (window.history.replaceState) {
+    window.history.replaceState({}, "", window.location.pathname);
+  }
+});
 </script>
 
 
