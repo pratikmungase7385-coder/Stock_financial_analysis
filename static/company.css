@@ -276,6 +276,34 @@ td {
 tr:hover {
   background: #f8fafc;
 }
+
+
+
+
+
+
+
+/* =======================
+   NEXT WRAPPER (BASE)
+======================= */
+.next {
+  max-width: 1350px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* =======================
+   FULL-WIDTH BREAKOUT
+======================= */
+.app-banner,
+.footer {
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  width: 100vw;
+}
 /* =======================
    NEXT WRAPPER (BASE)
 ======================= */
