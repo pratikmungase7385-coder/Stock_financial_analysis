@@ -1,37 +1,24 @@
-/* =======================
-   GLOBAL RESET
-======================= */
+/* RESET */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* =======================
-   GLOBAL
-======================= */
+/* BODY */
 body {
+  font-family: "Segoe UI", system-ui, sans-serif;
   background: #f3f6fb;
-  font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   color: #1f2937;
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-/* =======================
-   NAVBAR
-======================= */
+/* NAVBAR */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: linear-gradient(90deg, #6a0cff, #7b2cff);
   padding: 18px 40px;
-  color: #fff;
-  box-shadow: 0 6px 18px rgba(106,12,255,0.35);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -43,32 +30,24 @@ a {
   gap: 12px;
 }
 
-.name .logo {
+.logo {
   width: 30px;
   height: 30px;
-  object-fit: contain;
-}
-
-.name b {
-  font-size: 18px;
-  font-weight: 700;
-  color: #fff;
 }
 
 .menu a {
   color: #fff;
+  text-decoration: none;
   margin-left: 30px;
-  font-weight: 500;
   position: relative;
-  padding-bottom: 4px;
 }
 
 .menu a::after {
   content: "";
   position: absolute;
   left: 0;
-  bottom: 0;
-  width: 0%;
+  bottom: -4px;
+  width: 0;
   height: 2px;
   background: #fff;
   transition: 0.3s;
@@ -78,29 +57,19 @@ a {
   width: 100%;
 }
 
-/* =======================
-   PAGE CONTAINER
-======================= */
+/* CONTAINER */
 .container {
   max-width: 1350px;
   margin: 30px auto;
   padding: 0 20px;
 }
 
-/* =======================
-   COMPANY HEADER
-======================= */
+/* COMPANY CARD */
 .company-card {
   background: #fff;
-  border-radius: 24px;
   padding: 50px;
-  box-shadow: 0 20px 40px rgba(0,0,0,.06);
+  border-radius: 24px;
   margin-bottom: 50px;
-  transition: transform .25s ease, box-shadow .25s ease;
-}
-
-.company-card:hover {
-  transform: translateY(-4px);
 }
 
 .company-flex {
@@ -110,37 +79,20 @@ a {
 }
 
 .logo-box {
-  width: 220px;
-  height: 220px;
+  width: 200px;
+  height: 200px;
   background: #f4f6fa;
   border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: inset 0 0 0 1px #e6ebf3;
 }
 
 .logo-box img {
   max-width: 80%;
 }
 
-.company-info h1 {
-  font-size: 32px;
-  color: #1d4ed8;
-  margin-bottom: 12px;
-}
-
-.company-info p {
-  color: #363738;
-  line-height: 1.6;
-  font-size: 16px;
-  font-weight: 500;
-  max-width: 800px;
-}
-
-/* =======================
-   BUTTON
-======================= */
+/* BUTTON */
 .chart-btn {
   display: inline-block;
   margin-top: 15px;
@@ -148,8 +100,7 @@ a {
   border-radius: 30px;
   border: 2px solid #2563eb;
   color: #2563eb;
-  font-weight: 600;
-  transition: .2s;
+  text-decoration: none;
 }
 
 .chart-btn:hover {
@@ -157,57 +108,14 @@ a {
   color: #fff;
 }
 
-/* =======================
-   SECTION CARD
-======================= */
+/* CARD */
 .card {
   background: #fff;
+  padding: 40px;
   border-radius: 24px;
-  padding: 40px 50px;
   margin-bottom: 50px;
-  box-shadow: 0 20px 40px rgba(0,0,0,.05);
-  transition: transform .25s ease, box-shadow .25s ease;
 }
 
-.card:hover {
-  transform: translateY(-4px);
-}
-
-.card h2 {
-  font-size: 28px;
-  color: #1d4ed8;
-  margin-bottom: 10px;
-}
-
-/* =======================
-   ML STATUS
-======================= */
-.ml-status {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 15px 0 30px;
-  font-size: 18px;
-  color: #4b5563;
-}
-
-.ml-dot {
-  width: 13px;
-  height: 13px;
-  background: #373737;
-  border-radius: 50%;
-  animation: pulse 1s infinite;
-}
-
-@keyframes pulse {
-  0% { opacity: .4; }
-  50% { opacity: 1; }
-  100% { opacity: .4; }
-}
-
-/* =======================
-   ANALYSIS GRID
-======================= */
 .analysis-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -216,31 +124,21 @@ a {
 
 .box {
   background: #f9fafb;
-  border-radius: 18px;
   padding: 30px;
-  border: 1px solid #e5e7eb;
+  border-radius: 18px;
 }
 
-.box h3 {
-  color: #2563eb;
-  margin-bottom: 15px;
-}
-
-/* =======================
-   PROS & CONS
-======================= */
+/* PROS & CONS */
 .pc {
   display: flex;
-  gap: 40px;
+  gap: 30px;
 }
 
-.pros,
-.cons {
+.pros, .cons {
   flex: 1;
-  border-radius: 26px;
-  padding: 38px 42px;
+  padding: 30px;
   color: #fff;
-  box-shadow: 0 25px 45px rgba(0,0,0,.18);
+  border-radius: 20px;
 }
 
 .pros {
@@ -251,102 +149,79 @@ a {
   background: linear-gradient(135deg, #fb7185, #ec4899);
 }
 
-.pros h3,
-.cons h3 {
-  font-size: 28px;
-  margin-bottom: 26px;
-}
-
-.pros p,
-.cons p {
-  padding: 16px 0;
-  font-size: 15px;
-  border-bottom: 1px solid rgba(255,255,255,.35);
-}
-
-/* =======================
-   TABLES
-======================= */
+/* TABLE */
 table {
   width: 100%;
   border-collapse: collapse;
-  background: #fff;
-  border-radius: 16px;
-  overflow-x: auto;
-  display: block;
-  white-space: nowrap;
 }
 
-th {
-  background: #f1f5f9;
-  padding: 14px;
-  font-weight: 700;
-}
-
-td {
+th, td {
   padding: 14px;
   border-bottom: 1px solid #e5e7eb;
 }
 
-tr:hover {
-  background: #f8fafc;
+th {
+  background: #f1f5f9;
 }
 
-/* =======================
-   FULL-WIDTH APP BANNER
-======================= */
+/* DOCUMENTS */
+.documents-list {
+  background: #fff;
+  border-radius: 18px;
+  overflow: hidden;
+  margin-bottom: 60px;
+}
+
+.doc-header, .doc-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  padding: 16px 24px;
+}
+
+.doc-header {
+  background: #f1f5f9;
+  font-weight: 700;
+}
+
+.doc-row {
+  border-top: 1px solid #e5e7eb;
+}
+
+.doc-row a {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* APP BANNER */
 .app-banner {
   width: 100vw;
   margin-left: calc(-50vw + 50%);
-  margin-right: calc(-50vw + 50%);
   background: linear-gradient(90deg, #3b49f5, #8f2de2);
-  padding: 90px 20px;
+  padding: 80px 20px;
   text-align: center;
-}
-
-.app-banner h2 {
-  color: #fff;
-  font-size: 34px;
-  font-weight: 700;
-  margin-bottom: 35px;
 }
 
 .store-buttons {
   display: flex;
   justify-content: center;
-  gap: 22px;
+  gap: 20px;
   flex-wrap: wrap;
 }
 
-.store-buttons img {
-  height: 58px;
-  transition: transform 0.3s ease;
-}
-
-.store-buttons img:hover {
-  transform: scale(1.08);
-}
-
-/* =======================
-   FULL-WIDTH FOOTER
-======================= */
+/* FOOTER */
 .footer {
   width: 100vw;
   margin-left: calc(-50vw + 50%);
-  margin-right: calc(-50vw + 50%);
   background: #fff;
   border-top: 2px solid #e6e6e6;
 }
 
-.footer-inner {
+.footer-container {
   max-width: 1350px;
   margin: auto;
   padding: 60px 20px 20px;
-}
-
-.footer-container {
   display: flex;
-  justify-content: space-between;
   gap: 40px;
   flex-wrap: wrap;
 }
@@ -356,72 +231,18 @@ tr:hover {
   min-width: 220px;
 }
 
-.footer-column h3,
-.footer-column h4 {
-  color: #003366;
-  font-weight: 600;
-  margin-bottom: 15px;
-}
-
-.footer-column p {
-  font-size: 0.95rem;
-  color: #555;
-}
-
-/* Quick Links */
-.quick-links {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.quick-links li {
-  margin-bottom: 10px;
-}
-
-.quick-links li a {
-  display: flex;
-  align-items: center;
-  font-size: 15px;
-  color: #1b1b1b;
-}
-
-.quick-links li a span {
-  margin-right: 8px;
-  color: #6b9af9;
-}
-
-/* Social */
-.social-icons a {
-  font-size: 20px;
-  margin-right: 12px;
-  color: #0056ff;
-}
-
-/* Footer Bottom */
 .footer-bottom {
   text-align: center;
-  margin-top: 40px;
-  padding-top: 15px;
+  padding: 20px;
   border-top: 1px solid #e3e3e3;
-  font-size: 0.9rem;
-  color: #555;
 }
 
-/* =======================
-   RESPONSIVE
-======================= */
+/* RESPONSIVE */
 @media (max-width: 768px) {
-  .analysis-grid {
-    grid-template-columns: 1fr;
-  }
-
+  .company-flex,
+  .analysis-grid,
   .pc {
     flex-direction: column;
-  }
-
-  .footer-container {
-    flex-direction: column;
-    text-align: center;
+    grid-template-columns: 1fr;
   }
 }
